@@ -15,6 +15,7 @@ public class formRegistrarProveedor extends javax.swing.JFrame {
      */
     public formRegistrarProveedor() {
         initComponents();
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     }
 
     /**

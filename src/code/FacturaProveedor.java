@@ -6,4 +6,5 @@ package code;
  */
 public class FacturaProveedor extends Factura {
     private String codigoProveedor;
+
 }

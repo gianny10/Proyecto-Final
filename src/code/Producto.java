@@ -7,8 +7,6 @@ public class Producto {
     private int stock;
     private double precio;
     private String categoria;
-    private String prueba;
-    
     
     public Producto(){
         

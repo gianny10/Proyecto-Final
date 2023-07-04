@@ -2,8 +2,6 @@ package sql;
 
 import java.sql.*;
 import code.Producto;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
 
 public class C_Producto {
 
@@ -25,7 +23,7 @@ public class C_Producto {
                 estado = true;
             }
             c.close();
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error al registrar Producto " + producto.getNombre() + ", " + e.getMessage());
         }
 
@@ -47,8 +45,30 @@ public class C_Producto {
                 estado = true;
             }
             c.close();
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error al consultar categoria.");
+        }
+
+        return estado;
+    }
+
+    // Consulta al SQL para saber si existe una categoria de productos
+    public boolean actualizarStock(Producto producto, String codigo) {
+        boolean estado = false;
+        System.out.println(codigo);
+        String query = "update Producto set stock = ? where codigo = '" + codigo + "'";
+        System.out.println(query);
+        Connection c = Conexion.Conectar();
+        try {
+            PreparedStatement ps = c.prepareStatement(query);
+            ps.setInt(1, producto.getStock());
+
+            if (ps.executeUpdate() > 0) {
+                estado = true;
+            }
+            c.close();
+        } catch (SQLException e) {
+            System.out.println("Error al actualizar producto.");
         }
 
         return estado;

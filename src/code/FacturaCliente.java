@@ -5,5 +5,5 @@ package code;
  * @author Gianny
  */
 public class FacturaCliente extends Factura {
-    private String facturaCliente;
+    private String codigoCliente;
 }

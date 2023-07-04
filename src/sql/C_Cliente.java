@@ -12,7 +12,8 @@ import java.sql.Statement;
  * @author Gianny
  */
 public class C_Cliente {
-    public boolean agregarCliente(Cliente cliente){
+
+    public boolean agregarCliente(Cliente cliente) {
         Connection c = Conexion.Conectar();
         String query = "insert into TB_Cliente values (?,?,?,?,?,?,?,?)";
         boolean estado = false;
@@ -33,29 +34,47 @@ public class C_Cliente {
         } catch (SQLException e) {
             System.out.println("Error al registrar Cliente");
         }
-        
+
         return estado;
     }
-    
+
     // Consulta al SQL para saber si existe una categoria de productos
-    public  boolean existeCliente(String codigo){
-        boolean estado = false;
-        String query = "select codigo from TB_Cliente where codigo = '" + codigo + "';";
+    public boolean existeCliente(String codigo) {
+        String cliente = queryCliente("codigo", codigo);
+        return cliente.isEmpty() == false;
+    }
+
+    public String obtenerNombreCliente(String codigo) {
+        String nombre = queryCliente("nombre", codigo);
+        String apellido = queryCliente("apellido", codigo);
+        return nombre + " " + apellido;
+    }
+    
+    public String obtenerCodigoCliente(String codigo){
+        String cod = queryCliente("codigo", codigo);
+        return cod;
+    }
+
+    // Query que permite buscar un valor de un cliente segun su codigo
+    public String queryCliente(String datoBuscado, String codigo) {
+        String query = "select " + datoBuscado + " from TB_Cliente where codigo = '" + codigo + "';";
         Statement statement;
         Connection c;
+        ResultSet rs;
+        String resultado = "";
         try {
             c = Conexion.Conectar();
             statement = c.createStatement();
-            ResultSet rs = statement.executeQuery(query);
-            
-            while (rs.next()) {                
-                estado = true;
+            rs = statement.executeQuery(query);
+
+            while (rs.next()) {
+                resultado = rs.getString(1);
             }
             c.close();
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error al consultar cliente.");
         }
-        
-        return estado;
+
+        return resultado;
     }
 }

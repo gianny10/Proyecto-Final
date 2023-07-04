@@ -4,6 +4,9 @@ package code;
  *
  * @author Gianny
  */
-public class Factura extends Comprobante {
-    private String codigoFactura;
+public class Factura {
+    protected int cantidadProducto;
+    protected String descripcion;
+    protected String fecha;
+    protected double importeTotal;
 }
