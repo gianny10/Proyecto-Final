@@ -77,4 +77,32 @@ public class C_Cliente {
 
         return resultado;
     }
+    
+    // Consulta al SQL para actualizar stock
+    public boolean actualizarCliente(Cliente cliente, String codigo) {
+        boolean estado = false;
+        String query = "update TB_Cliente set codigo = ?, nombre = ?, apellido = ?, dni = ?, telefono = ?, direccion = ?, sexo = ?, edad = ? where codigo = '" + codigo + "'";
+        System.out.println(query);
+        Connection c = Conexion.Conectar();
+        try {
+            PreparedStatement ps = c.prepareStatement(query);
+            ps.setString(1, cliente.getCodigo());
+            ps.setString(2, cliente.getNombre());
+            ps.setString(3, cliente.getApellidos());
+            ps.setString(4, cliente.getDni());
+            ps.setString(5, cliente.getTelefono());
+            ps.setString(6, cliente.getDireccion());
+            ps.setString(7, cliente.getSexo());
+            ps.setString(8, cliente.getEdad());
+
+            if (ps.executeUpdate() > 0) {
+                estado = true;
+            }
+            c.close();
+        } catch (SQLException e) {
+            System.out.println("Error al actualizar usuario.");
+        }
+
+        return estado;
+    }
 }

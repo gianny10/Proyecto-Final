@@ -95,7 +95,7 @@ public class C_Usuario {
     public boolean actualizarUsuario(Usuario usuario, String codigo) {
         boolean estado = false;
         System.out.println(codigo);
-        String query = "update Usuario set codigo, usuario, password, telefono = ?, ?, ?, ? where codigo = '" + codigo + "'";
+        String query = "update Usuario set codigo = ?, usuario = ?, contraseña = ?, telefono = ? where codigo = '" + codigo + "'";
         System.out.println(query);
         Connection c = Conexion.Conectar();
         try {
