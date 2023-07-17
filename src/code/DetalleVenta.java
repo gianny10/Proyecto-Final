@@ -5,18 +5,20 @@ public class DetalleVenta {
     private String codigoProducto;
     private String nombre;
     private int cantidad;
+    private double precio;
     private double importe;
 
     public DetalleVenta(){
         
     }
     
-    public DetalleVenta(String codigoDetalleVenta, String codigoVenta, String codigoProducto, String nombre, int cantidad, double importe) {
+    public DetalleVenta(String codigoDetalleVenta, String codigoVenta, String codigoProducto, String nombre, int cantidad, double precio, double importe) {
         this.codigoDetalleVenta = codigoDetalleVenta;
         this.codigoVenta = codigoVenta;
         this.codigoProducto = codigoProducto;
         this.nombre = nombre;
         this.cantidad = cantidad;
+        this.precio = precio;
         this.importe = importe;
     }
 
@@ -60,6 +62,14 @@ public class DetalleVenta {
         this.cantidad = cantidad;
     }
 
+     public double getPrecio() {
+        return precio;
+    }
+
+    public void setPrecio(double precio) {
+        this.precio = precio;
+    }
+    
     public double getImporte() {
         return importe;
     }

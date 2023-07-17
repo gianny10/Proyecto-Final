@@ -1,27 +1,12 @@
 package sql;
+
+import code.Usuario;
 import code.Usuario;
 import java.sql.*;
 import javax.swing.JOptionPane;
-public class C_Usuario {
-    /* public boolean loginUser(Usuario user) {
-        boolean estado = false;
-        Connection c = Conexion.Conectar();
-        String sqlQuery = "select CONCAT(nombre, apellido) as Nombres, usuario, contraseña from Usuario where usuario = '" + user.getUsuario() + "' and contraseña = '" + user.getContraseña() + "'";
-        
-        try {
-            Statement s = c.createStatement();
-            ResultSet rs = s.executeQuery(sqlQuery);
-            while (rs.next()) {
-               estado = true;
-            }
-        } catch (SQLException e) {
-            System.out.println("Error al iniciar sesión");
-            JOptionPane.showMessageDialog(null, "Error al iniciar sesión");
-        }
 
-        return estado;
-    }*/
-    
+public class C_Usuario {
+
     public boolean loginUser(Usuario user) {
         boolean estado = false;
         Connection c = Conexion.Conectar();
@@ -68,7 +53,28 @@ public class C_Usuario {
         return estado;
 
     }
+    
+    public boolean eliminarUsuario(Usuario usuario, String codigo){
+        Connection c = Conexion.Conectar();
+        String sql = "DELETE FROM Usuario WHERE codigo = ?";
+        try {
 
+            PreparedStatement pt = c.prepareStatement(sql);
+            pt.setString(1, usuario.getCodigo());
+            int rowsAffected = pt.executeUpdate();
+
+            if (rowsAffected > 0) {
+                JOptionPane.showMessageDialog(null, "Usuario eliminado correctamente.");
+            } else {
+                JOptionPane.showMessageDialog(null, "No se encontró el usuario.");
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error al eliminar el usuario.");
+        }
+        return false;
+    }
+    
     // Consulta al SQL para saber si existe una categoria de productos
     public boolean existeUsuario(String usuario) {
         boolean estado = false;
@@ -94,9 +100,7 @@ public class C_Usuario {
     // Consulta al SQL para actualizar stock
     public boolean actualizarUsuario(Usuario usuario, String codigo) {
         boolean estado = false;
-        System.out.println(codigo);
         String query = "update Usuario set codigo = ?, usuario = ?, contraseña = ?, telefono = ? where codigo = '" + codigo + "'";
-        System.out.println(query);
         Connection c = Conexion.Conectar();
         try {
             PreparedStatement ps = c.prepareStatement(query);

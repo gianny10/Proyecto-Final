@@ -1,6 +1,7 @@
 package sql;
 
-import code.*;
+import code.DetalleVenta;
+import code.Venta;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -29,6 +30,8 @@ public class C_Ventas {
         return estado;
     }
     
+    // Registra cada detalle de venta
+    // Un detalle es cada producto  que se vendio
     public boolean registrarDetalleVenta(DetalleVenta detalleVenta) {
         Connection c = Conexion.Conectar();
         String query = "insert into TB_DetalleVenta values (?,?,?,?,?)";

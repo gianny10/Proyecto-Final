@@ -1,9 +1,11 @@
 package sql;
 
+import code.IQuery;
 import java.sql.*;
 import code.Producto;
+import code.Producto;
 
-public class C_Producto {
+public class C_Producto implements IQuery {
 
     // Metodo que permite registrar un producto en la base de datos
     public static boolean registrarProducto(Producto producto) {
@@ -28,6 +30,31 @@ public class C_Producto {
         }
 
         return estado;
+    }
+
+    public int obtenerStockProducto(String codigo) {
+        String valor = query("stock", codigo);
+        return Integer.parseInt(valor);
+    }
+
+    @Override
+    public String query(String datoBuscado, String codigo) {
+        String query = "select " + datoBuscado + " from Producto where codigo = '" + codigo + "';";
+        Statement statement;
+        ResultSet rs;
+        String resultado = "";
+        try {
+            statement = c.createStatement();
+            rs = statement.executeQuery(query);
+            while (rs.next()) {
+                resultado = rs.getString(1);
+            }
+            c.close();
+        } catch (SQLException e) {
+            System.out.println("Error al consultar Productos.");
+        }
+
+        return resultado;
     }
 
     // Consulta al SQL para saber si existe una categoria de productos
@@ -55,9 +82,7 @@ public class C_Producto {
     // Consulta al SQL para saber si existe una categoria de productos
     public boolean actualizarStock(Producto producto, String codigo) {
         boolean estado = false;
-        System.out.println(codigo);
         String query = "update Producto set stock = ? where codigo = '" + codigo + "'";
-        System.out.println(query);
         Connection c = Conexion.Conectar();
         try {
             PreparedStatement ps = c.prepareStatement(query);

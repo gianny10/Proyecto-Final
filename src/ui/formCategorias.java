@@ -227,7 +227,6 @@ public class formCategorias extends javax.swing.JFrame {
             if (fila > -1) {
                 System.out.println("Fila seleccionada");
                 codigoCategoria = model.getValueAt(fila, 0).toString();
-                System.out.println(codigoCategoria);
             }
         }});
     }

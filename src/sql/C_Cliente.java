@@ -7,10 +7,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-/**
- *
- * @author Gianny
- */
 public class C_Cliente {
 
     public boolean agregarCliente(Cliente cliente) {
@@ -82,7 +78,6 @@ public class C_Cliente {
     public boolean actualizarCliente(Cliente cliente, String codigo) {
         boolean estado = false;
         String query = "update TB_Cliente set codigo = ?, nombre = ?, apellido = ?, dni = ?, telefono = ?, direccion = ?, sexo = ?, edad = ? where codigo = '" + codigo + "'";
-        System.out.println(query);
         Connection c = Conexion.Conectar();
         try {
             PreparedStatement ps = c.prepareStatement(query);
@@ -93,14 +88,14 @@ public class C_Cliente {
             ps.setString(5, cliente.getTelefono());
             ps.setString(6, cliente.getDireccion());
             ps.setString(7, cliente.getSexo());
-            ps.setString(8, cliente.getEdad());
+            ps.setInt(8, Integer.parseInt(cliente.getEdad()));
 
             if (ps.executeUpdate() > 0) {
                 estado = true;
             }
             c.close();
         } catch (SQLException e) {
-            System.out.println("Error al actualizar usuario.");
+            System.out.println("Error al actualizar cliente.");
         }
 
         return estado;
