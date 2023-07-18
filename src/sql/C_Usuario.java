@@ -1,11 +1,10 @@
 package sql;
 
 import code.Usuario;
-import code.Usuario;
 import java.sql.*;
 import javax.swing.JOptionPane;
 
-public class C_Usuario {
+public class C_Usuario extends BaseQuery {
 
     public boolean loginUser(Usuario user) {
         boolean estado = false;
@@ -51,7 +50,6 @@ public class C_Usuario {
         }
 
         return estado;
-
     }
     
     public boolean eliminarUsuario(Usuario usuario, String codigo){
@@ -75,28 +73,6 @@ public class C_Usuario {
         return false;
     }
     
-    // Consulta al SQL para saber si existe una categoria de productos
-    public boolean existeUsuario(String usuario) {
-        boolean estado = false;
-        String query = "select codigo from usuario where Usuario = '" + usuario + "';";
-        Statement statement;
-        Connection c;
-        try {
-            c = Conexion.Conectar();
-            statement = c.createStatement();
-            ResultSet rs = statement.executeQuery(query);
-
-            while (rs.next()) {
-                estado = true;
-            }
-            c.close();
-        } catch (SQLException e) {
-            System.out.println("Error al consultar categoria.");
-        }
-
-        return estado;
-    }
-
     // Consulta al SQL para actualizar stock
     public boolean actualizarUsuario(Usuario usuario, String codigo) {
         boolean estado = false;
@@ -118,5 +94,10 @@ public class C_Usuario {
         }
 
         return estado;
+    }
+    
+    public boolean existeUsuario(String codigo){
+        String x = queryDatos("nombre", "Usuario", codigo);
+        return x.isEmpty() == false;
     }
 }

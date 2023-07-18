@@ -1,10 +1,5 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package sql;
 
-import code.CategoriaProducto;
 import code.CategoriaProducto;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -41,6 +36,25 @@ public class C_Categoria {
         return respuesta;
     }
     
+    // Elimina una categoria de la lista
+    public  boolean eliminarCategoria(String codigo){
+        boolean estado = false;
+        Connection c = Conexion.Conectar();
+        try {
+            PreparedStatement consulta = c.prepareStatement("delete from TB_CategoriaProducto where codigo = '" + codigo + "'");
+            consulta.executeUpdate();
+            if (consulta.executeUpdate() > 0) {
+                estado = true;
+            }
+            c.close();
+            
+        } catch (SQLException e) {
+            System.out.println("Error al eliminar categoria, conexion.");
+        }
+        
+        return estado;
+    }
+    
     // Consulta al SQL para saber si existe una categoria de productos
     public  boolean existeCategoria(String nombre){
         boolean estado = false;
@@ -58,24 +72,6 @@ public class C_Categoria {
             c.close();
         } catch (Exception e) {
             System.out.println("Error al consultar categoria.");
-        }
-        
-        return estado;
-    }
-    
-    public  boolean eliminarCategoria(String codigo){
-        boolean estado = false;
-        Connection c = Conexion.Conectar();
-        try {
-            PreparedStatement consulta = c.prepareStatement("delete from TB_CategoriaProducto where codigo = '" + codigo + "'");
-            consulta.executeUpdate();
-            if (consulta.executeUpdate() > 0) {
-                estado = true;
-            }
-            c.close();
-            
-        } catch (Exception e) {
-            System.out.println("Error al eliminar categoria, conexion.");
         }
         
         return estado;

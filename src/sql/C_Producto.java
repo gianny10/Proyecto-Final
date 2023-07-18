@@ -1,11 +1,9 @@
 package sql;
 
-import code.IQuery;
 import java.sql.*;
 import code.Producto;
-import code.Producto;
 
-public class C_Producto implements IQuery {
+public class C_Producto extends BaseQuery {
 
     // Metodo que permite registrar un producto en la base de datos
     public static boolean registrarProducto(Producto producto) {
@@ -31,54 +29,7 @@ public class C_Producto implements IQuery {
 
         return estado;
     }
-
-    public int obtenerStockProducto(String codigo) {
-        String valor = query("stock", codigo);
-        return Integer.parseInt(valor);
-    }
-
-    @Override
-    public String query(String datoBuscado, String codigo) {
-        String query = "select " + datoBuscado + " from Producto where codigo = '" + codigo + "';";
-        Statement statement;
-        ResultSet rs;
-        String resultado = "";
-        try {
-            statement = c.createStatement();
-            rs = statement.executeQuery(query);
-            while (rs.next()) {
-                resultado = rs.getString(1);
-            }
-            c.close();
-        } catch (SQLException e) {
-            System.out.println("Error al consultar Productos.");
-        }
-
-        return resultado;
-    }
-
-    // Consulta al SQL para saber si existe una categoria de productos
-    public boolean existeProducto(String codigo) {
-        boolean estado = false;
-        String query = "select nombre from Producto where codigo = '" + codigo + "';";
-        Statement statement;
-        Connection c;
-        try {
-            c = Conexion.Conectar();
-            statement = c.createStatement();
-            ResultSet rs = statement.executeQuery(query);
-
-            while (rs.next()) {
-                estado = true;
-            }
-            c.close();
-        } catch (SQLException e) {
-            System.out.println("Error al consultar categoria.");
-        }
-
-        return estado;
-    }
-
+    
     // Consulta al SQL para saber si existe una categoria de productos
     public boolean actualizarStock(Producto producto, String codigo) {
         boolean estado = false;
@@ -97,5 +48,11 @@ public class C_Producto implements IQuery {
         }
 
         return estado;
+    }
+    
+    // Buscamos un producto en la BBDD usando el metodo de BaseQuery
+    public boolean existeProducto(String codigo){
+        String cod = queryDatos("codigo", "Producto", codigo);
+        return cod.isEmpty() == false;
     }
 }

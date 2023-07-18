@@ -244,15 +244,15 @@ public class formRegistrarProducto extends javax.swing.JFrame {
             producto.setPrecio(Double.parseDouble(txtPrecio.getText()));
             producto.setStock(Integer.parseInt(txtCantidad.getText()));
             producto.setCategoria(obtenerCodigoCategoria());
-            if (cp.registrarProducto(producto)) {
-                if (cp.existeProducto(txtCodigo.getText()) == false) {
-                    JOptionPane.showMessageDialog(null, "Producto ya existe, actualice stock.");
-                }else{
+            if (cp.existeProducto(txtCodigo.getText())) {
+                JOptionPane.showMessageDialog(null, "Producto ya existe, actualice stock.");
+            }else{
+                if (cp.registrarProducto(producto)) {
                     JOptionPane.showMessageDialog(null, "Registro completado.");
+                    reiniciarCamposRegistro();
+                }else{
+                    JOptionPane.showMessageDialog(null, "No se pudo registrar nuevo producto.");
                 }
-                reiniciarCamposRegistro();
-            } else {
-                JOptionPane.showMessageDialog(null, "No se pudo registrar nuevo producto.");
             }
         }
     }
