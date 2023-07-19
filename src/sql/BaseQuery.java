@@ -10,7 +10,7 @@ public class BaseQuery  implements IQueryDatos{
 
     @Override
     public String queryDatos(String datoBuscado, String tabla, String codigo) {
-        String query = "select " + datoBuscado + " from '" + tabla + "' where codigo = '" + codigo + "'";
+        String query = "select " + datoBuscado + " from " + tabla + " where codigo = " + codigo;
         Statement statement;
         Connection c;
         ResultSet rs;
@@ -28,6 +28,6 @@ public class BaseQuery  implements IQueryDatos{
             System.out.println("Error al consultar tabla " + tabla);
         }
 
-        return resultado;
+        return resultado.trim();
     }
 }

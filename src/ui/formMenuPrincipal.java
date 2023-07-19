@@ -2,8 +2,10 @@ package ui;
 
 import code.Cliente;
 import code.DetalleVenta;
+import code.Producto;
 import code.Usuario;
 import code.Venta;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.sql.Connection;
@@ -17,6 +19,7 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import sql.C_Cliente;
+import sql.C_Producto;
 import sql.C_Usuario;
 import sql.C_Ventas;
 import sql.Conexion;
@@ -29,9 +32,9 @@ public class formMenuPrincipal extends javax.swing.JFrame {
     String codigoProductoVenta = "";
     String nombreProductoVenta = "";
     String idVentaSeleccionada = "";
-    double precioProductoVenta = 0;
-    int stockProductoBBDDVenta = 0;
-    int nProductosVenta = 1;
+    double precioProductoVenta = 0; // Guarda el precio actual del producto seleccionado
+    int stockProductoBBDDVenta = 0; // Guarda el stock actual del producto seleccionado
+    // Lista que almacena los productos seleccionados por vender
     ArrayList<DetalleVenta> listaProductos = new ArrayList<>();
 
     C_Cliente cc = new C_Cliente();
@@ -43,6 +46,7 @@ public class formMenuPrincipal extends javax.swing.JFrame {
         // Ventana Ventas
         iniciarTablaVentas();
         cargarProductosParaVenta();
+        colocarCodigoBoletaVenta();
 
         // Cargar Historial
         cargarHistorialVentas();
@@ -123,7 +127,6 @@ public class formMenuPrincipal extends javax.swing.JFrame {
         tablaClientesVentanaCliente = new javax.swing.JTable();
         jPanel3 = new javax.swing.JPanel();
         jLabel16 = new javax.swing.JLabel();
-        txtCodigoCliente = new javax.swing.JTextField();
         jLabel17 = new javax.swing.JLabel();
         txtNombreRegistroCliente = new javax.swing.JTextField();
         txtApellidoRegistroCliente = new javax.swing.JTextField();
@@ -141,6 +144,7 @@ public class formMenuPrincipal extends javax.swing.JFrame {
         btnAgregarClienteVentanaCliente = new javax.swing.JButton();
         btnBorrarBusquedaVentanaCliente = new javax.swing.JButton();
         btnActualizarCliente = new javax.swing.JButton();
+        txtCodigoDeCliente = new javax.swing.JTextField();
         jPanelVentanaHistorial = new javax.swing.JPanel();
         jPanel12 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
@@ -510,20 +514,10 @@ public class formMenuPrincipal extends javax.swing.JFrame {
         cbxBuscarProductoVenta.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
         cbxBuscarProductoVenta.setForeground(new java.awt.Color(255, 255, 255));
         cbxBuscarProductoVenta.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccionar producto:", "Item 2", "Item 3", "Item 4" }));
-        cbxBuscarProductoVenta.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbxBuscarProductoVentaActionPerformed(evt);
-            }
-        });
 
         txtCantidadVender.setFont(new java.awt.Font("Times New Roman", 0, 20)); // NOI18N
 
         txtClienteDNI.setFont(new java.awt.Font("Times New Roman", 0, 20)); // NOI18N
-        txtClienteDNI.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtClienteDNIActionPerformed(evt);
-            }
-        });
 
         btnBuscarCliente.setFont(new java.awt.Font("Times New Roman", 0, 24)); // NOI18N
         btnBuscarCliente.setText("Buscar");
@@ -870,8 +864,6 @@ public class formMenuPrincipal extends javax.swing.JFrame {
         jLabel16.setForeground(new java.awt.Color(255, 255, 255));
         jLabel16.setText("Código");
 
-        txtCodigoCliente.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
-
         jLabel17.setFont(new java.awt.Font("Times New Roman", 0, 24)); // NOI18N
         jLabel17.setForeground(new java.awt.Color(255, 255, 255));
         jLabel17.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -951,6 +943,8 @@ public class formMenuPrincipal extends javax.swing.JFrame {
             }
         });
 
+        txtCodigoDeCliente.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -981,11 +975,11 @@ public class formMenuPrincipal extends javax.swing.JFrame {
                             .addComponent(jLabel17)
                             .addComponent(jLabel16))
                         .addGap(13, 13, 13)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txtDNIRegistroCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txtApellidoRegistroCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txtNombreRegistroCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtCodigoCliente))))
+                            .addComponent(txtCodigoDeCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(0, 12, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -998,13 +992,10 @@ public class formMenuPrincipal extends javax.swing.JFrame {
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(41, 41, 41)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(36, 36, 36)
-                        .addComponent(txtCodigoCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel16)))
+                    .addComponent(jLabel16)
+                    .addComponent(txtCodigoDeCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txtNombreRegistroCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1752,14 +1743,6 @@ public class formMenuPrincipal extends javax.swing.JFrame {
         cerrarSesion();
     }//GEN-LAST:event_btnCerrarSesionActionPerformed
 
-    private void cbxBuscarProductoVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxBuscarProductoVentaActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cbxBuscarProductoVentaActionPerformed
-
-    private void txtClienteDNIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtClienteDNIActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtClienteDNIActionPerformed
-
     private void btnAgregarClienteVentanaClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarClienteVentanaClienteActionPerformed
         // TODO add your handling code here:
         agregarCliente();
@@ -1819,26 +1802,7 @@ public class formMenuPrincipal extends javax.swing.JFrame {
 
     private void tablaVentaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaVentaMouseClicked
         // TODO add your handling code here:
-        System.out.println("Hola venta");
-        int fila = tablaVenta.rowAtPoint(evt.getPoint());
-        int columna = 0;
-        int id = 0;
-        if (fila > -1) {
-            id = (int) ventaModel.getValueAt(fila, columna);
-        }
-
-        int opcion = JOptionPane.showConfirmDialog(null, "¿Desea eliminar el producto?");
-        switch (opcion) {
-            case 0:
-                listaProductos.remove(id - 1);
-                agregarProductoATabla();
-                calcularImporteVenta();
-                break;
-            case 1:
-                break;
-            default:
-                throw new AssertionError();
-        }
+        seleccionarProductoTablaVenta(evt);
     }//GEN-LAST:event_tablaVentaMouseClicked
 
     private void btnGenerarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerarVentaActionPerformed
@@ -1848,6 +1812,7 @@ public class formMenuPrincipal extends javax.swing.JFrame {
 
     private void btnActualizarUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarUsuarioActionPerformed
         actualizarUsuario();
+        cargarTablaUsuarios();
     }//GEN-LAST:event_btnActualizarUsuarioActionPerformed
 
     private void btnRegistrarUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarUsuarioActionPerformed
@@ -1951,6 +1916,36 @@ public class formMenuPrincipal extends javax.swing.JFrame {
         txtTotal.setText("0.00");
     }
 
+    private void colocarCodigoBoletaVenta(){
+        C_Ventas cv = new C_Ventas();
+        String boleta = cv.generarCodigo();
+        txtBoleta.setText(boleta);
+    }
+    
+    // Permite seleccionar una fila de la tabla para eleminar el Producto
+    private void seleccionarProductoTablaVenta(MouseEvent evt) {
+        System.out.println("Hola venta");
+        int fila = tablaVenta.rowAtPoint(evt.getPoint());
+        int columna = 0;
+        int id = 0;
+        if (fila > -1) {
+            id = (int) ventaModel.getValueAt(fila, columna);
+        }
+
+        int opcion = JOptionPane.showConfirmDialog(null, "¿Desea eliminar el producto?");
+        switch (opcion) {
+            case 0:
+                listaProductos.remove(id - 1);
+                agregarProductoATabla();
+                calcularImporteVenta();
+                break;
+            case 1:
+                break;
+            default:
+                throw new AssertionError();
+        }
+    }
+
     // Registra una venta con todos los productos de la tabla
     private void registrarVenta() {
         Venta venta = new Venta();
@@ -1970,19 +1965,13 @@ public class formMenuPrincipal extends javax.swing.JFrame {
                 // Registramos cada detalle de venta a la BBDD
                 System.out.println("Tamaño: " + listaProductos.size());
                 for (int i = 0; i < listaProductos.size(); i++) {
-                    System.out.println("Dentro: " + listaProductos.get(i));
                     detalle.setCodigoVenta(listaProductos.get(i).getCodigoVenta());
-                    System.out.println("Codigo venta: " + listaProductos.get(i).getCodigoVenta());
                     detalle.setCodigoDetalleVenta(listaProductos.get(i).getCodigoDetalleVenta());
-                    System.out.println("Codigo detalle: " + listaProductos.get(i).getCodigoDetalleVenta());
                     detalle.setCodigoProducto(listaProductos.get(i).getCodigoProducto());
-                    System.out.println("Codigo producto: " + listaProductos.get(i).getCodigoProducto());
                     detalle.setCantidad(listaProductos.get(i).getCantidad());
                     detalle.setPrecio(listaProductos.get(i).getPrecio());
                     detalle.setImporte(listaProductos.get(i).getImporte());
                     if (cv.registrarDetalleVenta(detalle)) {
-                        System.out.println("Producto registrado.");
-                        // nProductosVenta = 1;
                         cargarProductosParaVenta();
                         txtSubtotal.setText("0.00");
                         txtIGV.setText("0.00");
@@ -1992,6 +1981,8 @@ public class formMenuPrincipal extends javax.swing.JFrame {
                     }
                 }
 
+                colocarCodigoBoletaVenta();
+                actualizarProductosPostVenta();
                 cancelarVenta();
                 cargarHistorialVentas();
 
@@ -1999,6 +1990,43 @@ public class formMenuPrincipal extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Error al registrar venta.");
             }
         }
+    }
+
+    private void actualizarProductosPostVenta() {
+        try {
+            for (int i = 0; i < listaProductos.size(); i++) {
+                String codProducto = listaProductos.get(i).getCodigoProducto().trim();
+                System.out.println("Codigo postVenta: " + codProducto);
+                int cantidadPorVender = listaProductos.get(i).getCantidad();
+                System.out.println("Cantidad postVenta: " + cantidadPorVender);
+                String query = "select * from Producto where codigo = '" + codProducto + "'";
+                System.out.println("Query postVenta: " + query);
+                int stockActual = 0;
+
+                Connection c = Conexion.Conectar();
+                Statement st = c.createStatement();
+                ResultSet rs = st.executeQuery(query);
+                if (rs.next()) {
+                    stockActual = rs.getInt("stock");
+                }
+
+                Producto producto = new Producto();
+                C_Producto cp = new C_Producto();
+
+                int nuevoStock = stockActual - cantidadPorVender;
+                producto.setStock(nuevoStock);
+                if (cp.actualizarStock(producto, codProducto)) {
+                    System.out.println("Stock Actualizado -> " + i);
+                    cargarTablaProductos();
+                } else {
+                    System.out.println("No se pudo actualizar poo se st venta");
+                }
+
+            }
+        } catch (SQLException e) {
+            System.out.println("SQL Error: No se pudo actualizar el stock post venta.");
+        }
+
     }
 
     // Obtiene los datos del producto seleccionado del Cbx
@@ -2048,7 +2076,6 @@ public class formMenuPrincipal extends javax.swing.JFrame {
                     calcularImporteVenta();
 
                     JOptionPane.showMessageDialog(null, "Producto agregado.");
-                    nProductosVenta++;
                     txtCantidadVender.setText(null);
                 } else {
                     JOptionPane.showMessageDialog(null, "Error: Cantidad supera el stock\nStock restante: "
@@ -2140,6 +2167,7 @@ public class formMenuPrincipal extends javax.swing.JFrame {
         }
     }
 
+    // Reinicia la ventana
     private void cancelarVenta() {
         txtClienteDatosVenta.setText(null);
         txtClienteDNI.setEditable(true);
@@ -2151,6 +2179,7 @@ public class formMenuPrincipal extends javax.swing.JFrame {
         agregarProductoATabla();
     }
 
+    // Redondea los montos
     private double redondear(double n) {
         return (Math.round(n) * 100) / 100;
     }
@@ -2269,7 +2298,7 @@ public class formMenuPrincipal extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Ventana Cliente">
     private void agregarCliente() {
         Cliente cliente = new Cliente();
-        cliente.setCodigo(txtDNIRegistroCliente.getText());
+        cliente.setCodigo(txtCodigoDeCliente.getText().trim());
         cliente.setNombre(txtNombreRegistroCliente.getText());
         cliente.setApellidos(txtApellidoRegistroCliente.getText());
         cliente.setDni(txtDNIRegistroCliente.getText());
@@ -2280,7 +2309,7 @@ public class formMenuPrincipal extends javax.swing.JFrame {
         if (registroEstaVacio()) {
             JOptionPane.showMessageDialog(null, "Completar campos vacios.");
         } else {
-            if (cc.existeCliente(txtDNIRegistroCliente.getText()) == false) {
+            if (cc.existeCliente(txtCodigoDeCliente.getText().trim()) == false) {
                 if (cc.agregarCliente(cliente)) {
                     JOptionPane.showMessageDialog(null, "Cliente registrado correctamente.");
                     reiniciarRegistroCliente();
@@ -2322,7 +2351,7 @@ public class formMenuPrincipal extends javax.swing.JFrame {
                 model.addRow(data);
             }
             c.close();
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error al cargar las categorías.");
         }
     }
@@ -2340,7 +2369,7 @@ public class formMenuPrincipal extends javax.swing.JFrame {
             rs = ps.executeQuery();
 
             while (rs.next()) {
-                txtCodigoCliente.setText(rs.getString("codigo"));
+                txtCodigoDeCliente.setText(rs.getString("codigo"));
                 txtNombreRegistroCliente.setText(rs.getString("nombre"));
                 txtApellidoRegistroCliente.setText(rs.getString("apellido"));
                 txtDNIRegistroCliente.setText(rs.getString("dni"));
@@ -2359,9 +2388,9 @@ public class formMenuPrincipal extends javax.swing.JFrame {
         if (registroEstaVacio()) {
             JOptionPane.showMessageDialog(null, "Error: Llenar los campos.");
         } else {
-            if (txtCodigoCliente.getText().isEmpty() == false) {
+            if (txtCodigoDeCliente.getText().isEmpty() == false) {
                 Cliente cliente = new Cliente();
-                String codigo = txtCodigoCliente.getText().trim();
+                String codigo = txtCodigoDeCliente.getText().trim();
                 String nombre = txtNombreRegistroCliente.getText();
                 String apellido = txtApellidoRegistroCliente.getText();
                 String dni = txtDNIRegistroCliente.getText();
@@ -2393,7 +2422,7 @@ public class formMenuPrincipal extends javax.swing.JFrame {
 
     private void cancelarBusquedaCliente() {
         reiniciarRegistroCliente();
-        txtCodigoCliente.requestFocus();
+        txtCodigoDeCliente.requestFocus();
     }
 
     private boolean registroEstaVacio() {
@@ -2408,7 +2437,7 @@ public class formMenuPrincipal extends javax.swing.JFrame {
 
     // Reinicia la tabla de registro
     private void reiniciarRegistroCliente() {
-        txtCodigoCliente.setText(null);
+        txtCodigoDeCliente.setText(null);
         txtNombreRegistroCliente.setText(null);
         txtApellidoRegistroCliente.setText(null);
         txtDNIRegistroCliente.setText(null);
@@ -2698,7 +2727,7 @@ public class formMenuPrincipal extends javax.swing.JFrame {
     private javax.swing.JTextField txtCantidadVender;
     private javax.swing.JTextField txtClienteDNI;
     private javax.swing.JTextField txtClienteDatosVenta;
-    private javax.swing.JTextField txtCodigoCliente;
+    private javax.swing.JTextField txtCodigoDeCliente;
     private javax.swing.JTextField txtDNIRegistroCliente;
     private javax.swing.JTextField txtDireccionRegistroCliente;
     private javax.swing.JTextField txtEdadRegistroCliente;

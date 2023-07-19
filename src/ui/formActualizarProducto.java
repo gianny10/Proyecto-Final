@@ -202,7 +202,6 @@ public class formActualizarProducto extends javax.swing.JFrame {
         }
     }
 
-    
     private void actualizarStock() {
         if (cbxProductos.getSelectedItem().equals("Seleccionar Producto:")) {
             JOptionPane.showMessageDialog(null, "Error: Elegir producto.");
@@ -217,7 +216,6 @@ public class formActualizarProducto extends javax.swing.JFrame {
                     int stockPorAgregar = Integer.parseInt(txtAgregarStock.getText());
                     int nuevoStock = stockActual + stockPorAgregar;
                     producto.setStock(nuevoStock);
-                    System.out.println(producto.getStock());
                     if (cp.actualizarStock(producto, codigoProducto)) {
                         JOptionPane.showMessageDialog(null, "Stock actualizado.");
                         cbxProductos.setSelectedIndex(0);
