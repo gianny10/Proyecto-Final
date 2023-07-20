@@ -37,8 +37,6 @@ public class formMenuPrincipal extends javax.swing.JFrame {
     // Lista que almacena los productos seleccionados por vender
     ArrayList<DetalleVenta> listaProductos = new ArrayList<>();
 
-    C_Cliente cc = new C_Cliente();
-
     public formMenuPrincipal() {
         initComponents();
         abrirPanel(null);
@@ -59,6 +57,8 @@ public class formMenuPrincipal extends javax.swing.JFrame {
         cargarTablaClientes();
 
         // Cargar Proveedor
+        
+        
         // Tabla Usuarios
         cargarTablaUsuarios();
     }
@@ -2296,8 +2296,10 @@ public class formMenuPrincipal extends javax.swing.JFrame {
 
     // </editor-fold> 
     // <editor-fold defaultstate="collapsed" desc="Ventana Cliente">
+
     private void agregarCliente() {
         Cliente cliente = new Cliente();
+        C_Cliente cc = new C_Cliente();
         cliente.setCodigo(txtCodigoDeCliente.getText().trim());
         cliente.setNombre(txtNombreRegistroCliente.getText());
         cliente.setApellidos(txtApellidoRegistroCliente.getText());
@@ -2390,6 +2392,7 @@ public class formMenuPrincipal extends javax.swing.JFrame {
         } else {
             if (txtCodigoDeCliente.getText().isEmpty() == false) {
                 Cliente cliente = new Cliente();
+                C_Cliente cc = new C_Cliente();
                 String codigo = txtCodigoDeCliente.getText().trim();
                 String nombre = txtNombreRegistroCliente.getText();
                 String apellido = txtApellidoRegistroCliente.getText();
@@ -2569,6 +2572,8 @@ public class formMenuPrincipal extends javax.swing.JFrame {
     }
 
     // </editor-fold> 
+    
+    
     /**
      * @param args the command line arguments
      */

@@ -3,15 +3,13 @@ package sql;
 import code.CategoriaProducto;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 /**
  *
  * @author Gianny
  */
-public class C_Categoria {
+public class C_Categoria extends BaseQuery {
     
     // Permite registrar una nueva categoria
     public boolean guardar(CategoriaProducto c){
@@ -41,7 +39,8 @@ public class C_Categoria {
         boolean estado = false;
         Connection c = Conexion.Conectar();
         try {
-            PreparedStatement consulta = c.prepareStatement("delete from TB_CategoriaProducto where codigo = '" + codigo + "'");
+            
+            PreparedStatement consulta = c.prepareStatement("delete from TB_CategoriaProducto where codigo = " + codigo);
             consulta.executeUpdate();
             if (consulta.executeUpdate() > 0) {
                 estado = true;
@@ -55,25 +54,8 @@ public class C_Categoria {
         return estado;
     }
     
-    // Consulta al SQL para saber si existe una categoria de productos
-    public  boolean existeCategoria(String nombre){
-        boolean estado = false;
-        String query = "select nombre from TB_CategoriaProducto where nombre = '" + nombre + "';";
-        Statement statement;
-        Connection c;
-        try {
-            c = Conexion.Conectar();
-            statement = c.createStatement();
-            ResultSet rs = statement.executeQuery(query);
-            
-            while (rs.next()) {                
-                estado = true;
-            }
-            c.close();
-        } catch (Exception e) {
-            System.out.println("Error al consultar categoria.");
-        }
-        
-        return estado;
+    public boolean existeCategoria(String nombre){
+        String cod = queryDatos("nombre", "TB_CategoriaProducto", nombre);
+        return cod.isEmpty() == false;
     }
 }

@@ -59,7 +59,7 @@ public class C_Cliente extends BaseQuery {
         return estado;
     }
     
-    // Consulta al SQL para saber si existe una categoria de productos
+    // Consulta al SQL para saber si existe un cliente en la BBDD
     public boolean existeCliente(String codigo) {
         String cliente = queryDatos("codigo", "TB_Cliente", codigo);
         return cliente.isEmpty() == false;

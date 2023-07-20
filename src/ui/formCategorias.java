@@ -148,8 +148,9 @@ public class formCategorias extends javax.swing.JFrame {
         // TODO add your handling code here:
         C_Categoria categoria = new C_Categoria();
         
+        System.out.println(codigoCategoria.trim());
         if (codigoCategoria.isEmpty() == false) {
-            if (categoria.eliminarCategoria(codigoCategoria) == false){
+            if (categoria.eliminarCategoria(codigoCategoria.trim()) == false){
                 JOptionPane.showMessageDialog(null, "Categoria Eliminada");
                 cargarTablaCategorias();
             }
